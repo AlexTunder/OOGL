@@ -18,8 +18,7 @@ namespace glClass
 {
     class Point{
         public:
-        float x, y, z;
-        long id;
+        long x, y, z, id;
     };
     Point makePoint(long x, long y, long z){
         Point subReturn;
@@ -58,12 +57,18 @@ namespace glClass
     };
     int obj::getObjFromFile(char *string){
         ifstream fin(string);
-        std::string substr;
-        fin >> substr;
+        char sub;
+        cstring substr;
+        fin >> substr.value;
         if(substr == "v"){
-            for(int i = 0; i<3; i++){
-                fin >> substr;
-                VERTEXES[++VERTEXES[0].id].x = std::stof(substr);
+            fin >> substr.value;
+            bool l = false;
+            float subf;
+            int lol;
+            for(int i = 0; substr.value[i]!=0;i++){
+                if(substr.value[i]=='.') l = 1;
+                if(!l) subf = subf * 10 + substr.value[i] - '0';
+                else (substr.value[i] - '0')*10*++lol;
             }
         }
     }
@@ -80,7 +85,7 @@ namespace glClass
                 for(int y = 0; y < 4; y++){
                     /*TEXTURE:   ((main.TEX_VERT[main.RENDERDC[i].points[y].y].x,main.TEX_VERT[main.RENDERDC[i].points[y].y].y,main.TEX_VERT[main.RENDERDC[i].points[y].y].z))*/
                     /*NORMALE:   ((main.NORMALES[main.RENDERDC[i].points[y].z].x,main.NORMALES[main.RENDERDC[i].points[y].z].y,main.NORMALES[main.RENDERDC[i].points[y].z].z))*/
-                        glVertex3f(main.VERTEXES[int(main.RENDERDC[i].points[y].x)].x,main.VERTEXES[int(main.RENDERDC[i].points[y].x)].y,main.VERTEXES[int(main.RENDERDC[i].points[y].x)].z);
+                        glVertex3f(main.VERTEXES[main.RENDERDC[i].points[y].x].x,main.VERTEXES[main.RENDERDC[i].points[y].x].y,main.VERTEXES[main.RENDERDC[i].points[y].x].z);
                     }
             //drawing end
         }

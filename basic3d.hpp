@@ -60,32 +60,35 @@ namespace glClass
         VERTEXES[0].id = NORMALES[0].id = TEX_VERT[0].id = RENDERDC[0].points[0].id = 0;
         ifstream fin(string);
         std::string substr;
-        fin >> substr;
-        if(substr == "v"){
-            for(int i = 0; i<3; i++){
-                fin >> substr;
-                VERTEXES[++VERTEXES[0].id].x = std::stof(substr);
-            }
-        }else if(substr == "vn"){
-            for(int i = 0; i<3; i++){
-                fin >> substr;
-                NORMALES[++NORMALES[0].id].x = std::stof(substr);
-            }
-        }else if(substr == "vt"){
-            for(int i = 0; i<3; i++){
-                fin >> substr;
-                TEX_VERT[++TEX_VERT[0].id].x = std::stof(substr);
-            }
-        }else if(substr == "f"){
-            for(int i = 0; i<4; i++){
-                fin >> substr;
-                RENDERDC[RENDERDC[0].points[0].id].points[i].x = substr[0];
-                if(substr[2] != '/') {
-                    RENDERDC[RENDERDC[0].points[0].id].points[i].y = substr[2];
-                    RENDERDC[RENDERDC[0].points[0].id].points[i].z = substr[5];
-                }else RENDERDC[RENDERDC[0].points[0].id].points[i].z = substr[3];
+        while(fin.eof()){
+            fin >> substr;
+            if(substr == "v"){
+                for(int i = 0; i<3; i++){
+                    fin >> substr;
+                    VERTEXES[++VERTEXES[0].id].x = std::stof(substr);
+                }
+            }else if(substr == "vn"){
+                for(int i = 0; i<3; i++){
+                    fin >> substr;
+                    NORMALES[++NORMALES[0].id].x = std::stof(substr);
+                }
+            }else if(substr == "vt"){
+                for(int i = 0; i<3; i++){
+                    fin >> substr;
+                    TEX_VERT[++TEX_VERT[0].id].x = std::stof(substr);
+                }
+            }else if(substr == "f"){
+                for(int i = 0; i<4; i++){
+                    fin >> substr;
+                    RENDERDC[RENDERDC[0].points[0].id].points[i].x = substr[0];
+                    if(substr[2] != '/') {
+                        RENDERDC[RENDERDC[0].points[0].id].points[i].y = substr[2];
+                        RENDERDC[RENDERDC[0].points[0].id].points[i].z = substr[5];
+                    }else RENDERDC[RENDERDC[0].points[0].id].points[i].z = substr[3];
+                }
             }
         }
+    fin.close();
     }
     int obj::pushNewPoint(Point *VERTEX_TARGET, Point point){
         VERTEX_TARGET[VERTEX_TARGET[0].id] = point;

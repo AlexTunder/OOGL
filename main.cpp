@@ -5,7 +5,7 @@
 #include "scenes.hpp"
 glClass::model a;
 int main(int arg, char **argv){
-    std::cout << a.main.RENDERDC[0].points[0].id<<":"<< a.main.RENDERDC[0].points[0].x<<":"<< a.main.RENDERDC[0].points[0].y<<":"<< a.main.RENDERDC[0].points[0].z;
-    cin.get();
+    a.main.getObjFromFile("resourses/untitled.obj");
+    cout << a.main.RENDERDC[2].points[2].x;
     return 0;
 }

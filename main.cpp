@@ -34,6 +34,7 @@ int main(int arg, char **argv){
   glClearColor(0, 0, 0, 0); /* gray background */
   glEnable(GL_TEXTURE_2D);
   glShadeModel(GL_FLAT);
+  
  
   glMatrixMode(GL_PROJECTION);      /* In World coordinates: */
   glLoadIdentity();                 /* position the "clipping rectangle" */

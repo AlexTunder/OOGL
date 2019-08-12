@@ -16,7 +16,8 @@
                 "-lglut",
                 "-lSOIL",
                 "-lGLU",
-                "-lpng"
+                "-lpng",
+                "-lglew"
                 // "-lglu"
             ],
             "options": {

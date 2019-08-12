@@ -1,9 +1,7 @@
 #include <GL/glut.h>
 #include <fstream>
-#include <SOIL2.h>
-#include <cstring>
-#include <png.h>
-#include "loadpng.h"
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
 // #include <lo
 // #include <GL
 // #include <SOIL
@@ -66,8 +64,9 @@ namespace glClass
     };
     class obj{
         public:
-        images::png ___png___;
-        GLuint *texture = &___png___.texture;
+        unsigned char *tex;
+        GLuint texture;
+        int w = 0, h = 0, c = 0;
         // GLuint texture = loadPngImage("/home/alex/Леон.png",nullptr,nullptr);
 
         // if (0 == tex_2d)
@@ -75,7 +74,7 @@ namespace glClass
         //     printf("SOIL loading error: '%s'\n", SOIL_last_result());
         // }
         int PolygobCount;
-            enum {VERTEXESLASTID,NORMALESLASTID,ENDERDcLASTID};
+            // enum {VERTEXESLASTID,NORMALESLASTID,ENDERDcLASTID};
         //Points decloration
         Point VERTEXES[150];
         Point NORMALES[150];
@@ -142,9 +141,15 @@ namespace glClass
                     newfin >> imagePath;
                 }
             }
-            strcpy(___png___.path, imagePath.c_str());
-            ___png___.update();
-            
+            tex = stbi_load(imagePath.c_str(), &w, &h, &c, 0);
+            glGenTextures(1, &texture);
+            glBindTexture(GL_TEXTURE_2D, texture);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            if(c == 4)  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, glTexCoord1iv);
+            else glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, glTexCoord1iv);
             // ___png___
             // if (imagePath != "")
             //     LoadGLTextures(ssyJJaszZPPaR);
@@ -161,7 +166,7 @@ namespace glClass
             //drawing start
             // glEnable(GL_TEXTURE_2D);
             // glBindTexture(GL_TEXTURE_2D, tga->texture[ 0 ].texID);
-            glBindTexture(GL_TEXTURE_2D, *main.texture);
+            // glBindTexture(GL_TEXTURE_2D, *main.texture);
             for(int i = 1; i <= main.RENDERDC[0].points[0].id; i++){
                 glBegin(GL_QUADS);
                 glTexCoord2f(main.TEX_VERT[int(main.RENDERDC[i].points[0].y)].x,main.TEX_VERT[int(main.RENDERDC[i].points[i].y)].y);

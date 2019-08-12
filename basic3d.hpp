@@ -1,9 +1,7 @@
 #include <GL/glut.h>
 #include <fstream>
-#include <SOIL2.h>
-#include <cstring>
-#include "loadpng.h"
-#include <FreeImage.h>
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
 // #include <lo
 // #include <GL
 // #include <SOIL
@@ -25,6 +23,18 @@ using namespace std;
 
 namespace glClass
 {
+    class window{
+        int size[2], pos[2];
+    };
+    class init{
+            // void operator(){
+
+            // }
+            int ortho[6];
+            int *mainCella;
+            char **argCella;
+            // char &*argv;
+    };
     class Point{
         public:
         float x, y, z;
@@ -54,20 +64,17 @@ namespace glClass
     };
     class obj{
         public:
-        GLuint texture = SOIL_load_OGL_texture
-            (
-                "/home/alex/Леон.png",
-                SOIL_LOAD_AUTO,
-                SOIL_CREATE_NEW_ID,
-                SOIL_FLAG_MIPMAPS | SOIL_FLAG_COMPRESS_TO_DXT
-                );
+        unsigned char *tex;
+        GLuint texture;
+        int w = 0, h = 0, c = 0;
+        // GLuint texture = loadPngImage("/home/alex/Леон.png",nullptr,nullptr);
 
         // if (0 == tex_2d)
         // {
         //     printf("SOIL loading error: '%s'\n", SOIL_last_result());
         // }
         int PolygobCount;
-            enum {VERTEXESLASTID,NORMALESLASTID,ENDERDcLASTID};
+            // enum {VERTEXESLASTID,NORMALESLASTID,ENDERDcLASTID};
         //Points decloration
         Point VERTEXES[150];
         Point NORMALES[150];
@@ -134,8 +141,16 @@ namespace glClass
                     newfin >> imagePath;
                 }
             }
-            char *ssyJJaszZPPaR = new char;
-            strcpy(ssyJJaszZPPaR, imagePath.c_str());
+            tex = stbi_load(imagePath.c_str(), &w, &h, &c, 0);
+            glGenTextures(1, &texture);
+            glBindTexture(GL_TEXTURE_2D, texture);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            if(c == 4)  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, glTexCoord1iv);
+            else glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, glTexCoord1iv);
+            // ___png___
             // if (imagePath != "")
             //     LoadGLTextures(ssyJJaszZPPaR);
     fin.close();
@@ -151,8 +166,8 @@ namespace glClass
             //drawing start
             // glEnable(GL_TEXTURE_2D);
             // glBindTexture(GL_TEXTURE_2D, tga->texture[ 0 ].texID);
-            glBindTexture(GL_TEXTURE_2D, main.texture);
-            for(int i = 1; i <= main.PolygobCount; i++){
+            // glBindTexture(GL_TEXTURE_2D, *main.texture);
+            for(int i = 1; i <= main.RENDERDC[0].points[0].id; i++){
                 glBegin(GL_QUADS);
                 glTexCoord2f(main.TEX_VERT[int(main.RENDERDC[i].points[0].y)].x,main.TEX_VERT[int(main.RENDERDC[i].points[i].y)].y);
                 glVertex3f(main.VERTEXES[int(main.RENDERDC[i].points[0].x)].x,main.VERTEXES[int(main.RENDERDC[i].points[0].x)].y,main.VERTEXES[int(main.RENDERDC[i].points[0].x)].z);
@@ -166,5 +181,12 @@ namespace glClass
             }
             
         }
+    };
+    class scene{
+        public:
+        model modl;
+        int *ortho[6];
+        // model skybox;
+        char *sceneName = new char;
     };
 }

@@ -24,8 +24,8 @@ void display() {
 int main(int arg, char **argv){
   glEnable(GL_TEXTURE2);
   // cout << "\w";
-  cout << a.main.getObjFromFile("resourses/untitled.obj");
   glutInit(&arg,argv);
+  cout << a.main.getObjFromFile("/home/alex/Sources/OOGL/resourses/untitled.obj");
   glutInitWindowSize( 500, 450 );       /* A x A pixel screen window  */
 
   glutInitDisplayMode( GLUT_RGB | GLUT_DOUBLE);

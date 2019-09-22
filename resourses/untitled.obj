@@ -1,7 +1,7 @@
 # Blender v2.79 (sub 7) OBJ File: ''
 # www.blender.org
 mtllib untitled.mtl
-o Cube
+o Cube 8 20 5 6
 v 1.000000 -1.000000 -1.000000
 v 1.000000 -1.000000 1.000000
 v -1.000000 -1.000000 1.000000

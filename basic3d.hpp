@@ -1,5 +1,6 @@
 #include <GL/glut.h>
 #include <fstream>
+#include "defines.hpp"
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 // #include <lo
@@ -39,6 +40,9 @@ namespace glClass
         public:
         float x, y, z;
         long id;
+        Point(){
+            x = y= z= id= 0;
+        }
     };
     Point makePoint(long x, long y, long z){
         Point subReturn;
@@ -47,24 +51,26 @@ namespace glClass
         subReturn.z = z;
         return subReturn;
     }
-    Point makePoint(long coordinats[3]){
-        Point subReturn;
-        subReturn.x = coordinats[0];
-        subReturn.y = coordinats[1];
-        subReturn.z = coordinats[2];
-        return subReturn;
-    }
+    // Point makePoint(long coordinats[3]){
+    //     Point subReturn;
+    //     subReturn.x = coordinats[0];
+    //     subReturn.y = coordinats[1];
+    //     subReturn.z = coordinats[2];
+    //     return subReturn;
+    // }
     Point findPointById(Point *target, int targetSize, int targetId){
         for(int i = 0; i<targetSize||&target[i]!=nullptr; i++)
             if(target[i].id == targetId) return target[i];
     }
     class Polygon{
         public:
-        Point points[4];
+        Point *points = new Point[4];
     };
     class obj{
         public:
         unsigned char *tex;
+        std::string name;
+        long long vertcount[4];
         GLuint texture;
         int w = 0, h = 0, c = 0;
         // GLuint texture = loadPngImage("/home/alex/Леон.png",nullptr,nullptr);
@@ -76,24 +82,39 @@ namespace glClass
         int PolygobCount;
             // enum {VERTEXESLASTID,NORMALESLASTID,ENDERDcLASTID};
         //Points decloration
-        Point VERTEXES[150];
-        Point NORMALES[150];
-        Point TEX_VERT[150];
-        Polygon RENDERDC[150]; //x - VERTEX.point, y - NORMALES.point, z - TEX_VERT.point, id - id
+        Point *VERTEXES;
+        Point *NORMALES;
+        Point *TEX_VERT;
+        Polygon *RENDERDC; //x - VERTEX.point, y - NORMALES.point, z - TEX_VERT.point, id - id
         //functions decloration
         int pushNewPoint(Point *VERTEX_TARGET, Point point);
         int getObjFromFile(std::string string);
         string mtlPath, imagePath;
+        ~obj(){
+            delete [] VERTEXES;
+            delete [] NORMALES;
+            delete [] TEX_VERT;
+            delete [] RENDERDC;
+        }
     };
     int obj::getObjFromFile(std::string string){
-        VERTEXES[0].id = NORMALES[0].id = TEX_VERT[0].id = RENDERDC[0].points[0].id = 0;
+        // VERTEXES[0].id = NORMALES[0].id = TEX_VERT[0].id = RENDERDC[0].points[0].id = 0;
         ifstream fin(string);
         std::string substr;
         if(!fin.is_open())
+            // throw ("Can't load image with stbi! See 94 str.");
             return 95;
         while(!fin.eof()){ // OBJ file read
             fin >> substr;
-            if(substr == "v"){
+            if(substr == "o"){
+                fin >> name;
+                for(int i = 0; i < 4; i++)
+                    fin >> vertcount[i];
+                VERTEXES = new Point[vertcount[0]];
+                TEX_VERT = new Point[vertcount[1]];
+                NORMALES = new Point[vertcount[2]];
+                RENDERDC = new Polygon[++vertcount[3]];
+            }else if(substr == "v"){
                 VERTEXES[0].id++;
                     fin >> substr;
                     VERTEXES[VERTEXES[0].id].x = std::stof(substr);
@@ -116,6 +137,7 @@ namespace glClass
                     fin >> substr;
                     TEX_VERT[TEX_VERT[0].id].y = std::stof(substr);
             }else if(substr == "f"){
+                //stof don't wok here. Don't change!
                 PolygobCount = RENDERDC[0].points[0].id++;
                 for(int i = 0; i<4; i++){
                     fin >> substr;
@@ -148,8 +170,8 @@ namespace glClass
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            if(c == 4)  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, glTexCoord1iv);
-            else glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, glTexCoord1iv);
+            if(c == 4)  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, tex);
+            else glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, tex);
             // ___png___
             // if (imagePath != "")
             //     LoadGLTextures(ssyJJaszZPPaR);
@@ -162,6 +184,9 @@ namespace glClass
     class model{
       public:
       obj main;
+      ~model(){
+          delete &main;
+      }
         void draw(){
             //drawing start
             // glEnable(GL_TEXTURE_2D);
@@ -181,12 +206,5 @@ namespace glClass
             }
             
         }
-    };
-    class scene{
-        public:
-        model modl;
-        int *ortho[6];
-        // model skybox;
-        char *sceneName = new char;
     };
 }

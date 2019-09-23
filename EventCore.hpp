@@ -48,7 +48,7 @@ public:
     Event32();
     ~Event32();
 };
-bool checkEventBuffer(bool isEvent16){
+bool checkEventBuffer(bool isEvent16){ //comment
     if (isEvent16)
         return EventBuffer16 == nullptr;
     else return EventBuffer32 == nullptr;
@@ -78,9 +78,9 @@ private:
 public:
 char *targethost, eventdata[16];
 void evetFunc(char eventdata[16]){
-
+    // if()
 }
-void (*doAtEvent)();
+void (*doAtEvent)(char eventdata[16]);
 Handler16(void (*doAtEvent)(char eventdata[16]), char eventdata[16]);
 int start();
 };

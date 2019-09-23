@@ -13,101 +13,80 @@ typedef Event32 Event;
 typedef Event16 Event;
 #endif
 using std::thread;
-    char EventBuffer32[32][EVENTBUFFERSIZE];
+    char *EventBuffer32[EVENTBUFFERSIZE];
     char *EventBuffer16[EVENTBUFFERSIZE];
-
-
-    // int callEvent(Event *newEvent){
-        
-    // }
-    // int addEvent(Event *newEvent){
-        
-    // }
-    // int deleteEvent(Event *newEvent){
-        
-    // }
-
-class RawEvent{
-public:
-    // EventType eventType;
-    static char event[16];
+class eventException{
+    public:
+        char *error_text = new char;
+        char *bufferLink;
+        int error_code;
+        eventException(char *buffer, int code){
+            bufferLink = buffer;
+            error_code = code;
+        }
+        eventException(char *buffer, int code, char *comment){
+            bufferLink = buffer;
+            strcpy(error_text, comment);
+        }
 };
-class Event16 : public RawEvent{
+class Event16{
 public:
-    // Event16();
-    Event16(const char *name, int buf);
-    char *getPointer(){
-        return &event[0];
-    }
+    int staticindex;
+    char eventdata[16];
+    int call(char eventdata[16], int staticindex);
+    int call(char eventdata[16]);
+    int call();
+    Event16();
+    ~Event16();
 };
-Event16::Event16(const char name[16],int buf){
-    strcpy(this->event, name);
-    EventBuffer16[buf] = &this->event[0];
-
+class Event32:Event16{
+public:
+    char eventdata[32];
+    int call(char eventdata[32], int staticindex);
+    int call(char eventdata[32]);
+    int call();
+    Event32();
+    ~Event32();
+};
+bool checkEventBuffer(bool isEvent16){
+    if (isEvent16)
+        return EventBuffer16 == nullptr;
+    else return EventBuffer32 == nullptr;
 }
-class Event32:public Event{
-public:
-    static char event[32];
-};
+int callEvent16(char *eventdataPointer16, int indexOfBuffer){
+    if(checkEventBuffer(1))
+        EventBuffer16[indexOfBuffer] = eventdataPointer16;
+    else throw eventException(EventBuffer16[indexOfBuffer],116,"Throw Event to full x16 buffer. Code 116");
+}
+int callEvent32(char *eventdataPointer32, int indexOfBuffer){
+    if(checkEventBuffer(0))
+        EventBuffer32[indexOfBuffer] = eventdataPointer32;
+    else throw eventException(EventBuffer32[indexOfBuffer],132,"Throw Event to full x32 buffer. Code 132");
+}
+int callEvent16(char *eventdataPointer16, int indexOfBuffer,bool){
+    EventBuffer16[indexOfBuffer] = eventdataPointer16;
+    return checkEventBuffer(1);
+}
+int callEvent32(char *eventdataPointer32, int indexOfBuffer,bool){
+    EventBuffer32[indexOfBuffer] = eventdataPointer32;
+    return checkEventBuffer(0);
+}
 class Handler16{
+private:
+    int datacrash(char *eventdata);
+    thread HandlerMainLoop;
 public:
-    static int hellobytes;
-    static void threadmm(){
-        while (true)
-            for(int i = 0; i < EVENTBUFFERSIZE; i++)
-                if(std::string(eventTarget.event) == EventBuffer16[i])
-                    startHandler();
-    }
-    static Event16 eventTarget;
-    void static (*startHandler)(void);
-    std::thread eventHandler;
-    Handler16(int hellobytes, Event16 eventTarget, void (*startHandler)(void)){
-        this->hellobytes = hellobytes;
-        this->eventTarget = eventTarget;
-        this->startHandler = startHandler;
-        eventHandler = thread(threadmm);
-        eventHandler.join();
-    }
-};
-class Handler32{
-public:
-    static void threadmm(){
-        while (true)
-            for(int i = 0; i < EVENTBUFFERSIZE; i++)
-                if(std::string(eventTarget.event) == EventBuffer32[i])
-                    startHandler();
-    }
-    static int hellobytes;
-    static Event32 eventTarget;
-    void static (*startHandler)(void);
-    static std::thread eventHandler;
-    Handler32(int hellobytes, Event32 eventTarget, void (*startHandler)(void)){
-        this->hellobytes = hellobytes;
-        this->eventTarget = eventTarget;
-        this->startHandler = startHandler;
-        eventHandler = thread(threadmm);
-        eventHandler.join();
-    }
-};
-int Handler32::hellobytes = 0;
-int Handler16::hellobytes = 0;
-// void Handler32::threadmm(){
-//     while (true)
-//             for(int i = 0; i < EVENTBUFFERSIZE; i++)
-//                 if(std::string(eventTarget.event) == EventBuffer32[i])
-//                     startHandler();
-// }
-// void Handler16::threadmm(){
-//     while (true)
-//             for(int i = 0; i < EVENTBUFFERSIZE; i++)
-//                 if(std::string(eventTarget.event) == EventBuffer32[i])
-//                     startHandler();
-// }
-
-void nullvoid(void){
+char *targethost, eventdata[16];
+void evetFunc(char eventdata[16]){
 
 }
-// void Handler16::startHandler = nullvoid;
-// void Handler32::startHandler = 0;
-char RawEvent::event[16] = "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
-char Event32::event[32] = "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+void (*doAtEvent)();
+Handler16(void (*doAtEvent)(char eventdata[16]), char eventdata[16]);
+int start();
+};
+Handler16::Handler16(void (*doAtEvent)(char eventdata[16]), char eventdata[16]){
+    this->doAtEvent = doAtEvent;
+    strcpy(this->eventdata, eventdata);
+    HandlerMainLoop = thread(doAtEvent ,this, eventdata);
+    HandlerMainLoop.detach();
+}

@@ -3,10 +3,6 @@
 #include "defines.hpp"
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
-// #include <lo
-// #include <GL
-// #include <SOIL
-// #include <cstring.h>
 using namespace std;
 //САНЯ БЛЯТЬ, ЗАПОМНИ:
 /*

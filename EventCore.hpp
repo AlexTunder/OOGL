@@ -48,7 +48,7 @@ public:
     Event32();
     ~Event32();
 };
-bool checkEventBuffer(bool isEvent16){ //comment
+bool checkEventBuffer(bool isEvent16){  // uss
     if (isEvent16)
         return EventBuffer16 == nullptr;
     else return EventBuffer32 == nullptr;

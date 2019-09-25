@@ -1,8 +1,8 @@
 What is it?
     It's a cross-platform sub-libary for friendly API for openGL 3D fraphics. Libary wroten in C++ and all features realeased at classes
 Keywords
-    |____________________________________________________________________________________________________
-    |==========================================basic3d.hpp===============================================
+    |________________________________________________________________________________________________
+    |==========================================basic3d.hpp===========================================
     |
     |===> Classes and namespaces:
     |    glClass - global namespace, where store almost of classes for display and algorithms.
@@ -22,8 +22,8 @@ Keywords
     |
     |===> Global variavles and functions:
     |    glClass::makePoint(x, y, z) - make point with data x,y,z;
-    |___________________________________________________________________________________________________
-    |=========================================EventCore.hpp=============================================
+    |________________________________________________________________________________________________
+    |=========================================EventCore.hpp==========================================
     |
     |===> Before include:
     |    #define DEFAULT_EVENT_32 1 - if you want to use Handler32 and Event32 as glClass::Event by default

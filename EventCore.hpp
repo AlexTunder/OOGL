@@ -5,7 +5,7 @@
 #ifndef EVENTBUFFERSIZE
 #define EVENTBUFFERSIZE 1
 #endif
-class Event16;class Event32;class Handler16;class Handler32;class RawEvent;
+class Event16;class Event32;class Handler16;class Handler32;
 typedef char *EventType;
 #ifdef DEFAULT_EVENT_32
 typedef Event32 Event;
@@ -48,7 +48,7 @@ public:
     Event32();
     ~Event32();
 };
-bool checkEventBuffer(bool isEvent16){  // uss
+bool checkEventBuffer(bool isEvent16){
     if (isEvent16)
         return EventBuffer16 == nullptr;
     else return EventBuffer32 == nullptr;

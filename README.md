@@ -1,5 +1,5 @@
 What is it?
-It's a cross-platform sub-libary for friendly API for openGL 3D fraphics. Libary wroten in C++ and all features realeased at classes
+It's a cross-platform sub-libary for friendly API for openGL 3D fraphics. Libary wroten in C++ and all features realeased at classes\n
 Keywords
 basic3d.hpp
 Classes and namespaces:

@@ -3,8 +3,7 @@ What is it?
 Keywords
     |________________________________________________________________________________________________
     |==========================================basic3d.hpp===========================================
-    |
-    |===> Classes and namespaces:
+    |===>Classes and namespaces:
     |    glClass - global namespace, where store almost of classes for display and algorithms.
     |    glClass::obj - Class with obj data and links for some resources.
     |    glClass::texture - Class, Where store texture, file path and other info. Uses in glClass::model.
@@ -14,26 +13,20 @@ Keywords
     |    glClass::Point - array of 3 float.
     |    glClass::Polygon - array of 4 glClass::Points.
     |    glClass::Window - Class for all windows. (Wait for realise at 25.10.2019).
-    |
     |===>Methods    |===>glClass::model:
     |===============|draw() - start model projection.
     |===============|===>glClass::obj:
     |===============|getObjFromFile(path) - load obj model.
-    |
     |===> Global variavles and functions:
-    |    glClass::makePoint(x, y, z) - make point with data x,y,z;
-    |________________________________________________________________________________________________
+    |    glClass::makePoint(x, y, z) - make point with data x,y,z.
     |=========================================EventCore.hpp==========================================
-    |
     |===> Before include:
     |    #define DEFAULT_EVENT_32 1 - if you want to use Handler32 and Event32 as glClass::Event by default
     |    #define EVENTBUFFERSIZE [size] - set up size of event buffer. min - 1 max - 50. (1 by default)
-    |
     |===> Defines:
     |    EVENTBUFFERSIZE - is size of all buffers for Events. You can change this(read upply). By default = 1
     |    Event - is default event to usage(for more read upply).
     |    Handler - is default handler for usage. Shoud be same like Event
-    |
     |===> Classes and namespaces:
     |    glClass::Event16 - Class of event with 16-byte buffer. (low info size, for short data)
     |    glClass::Event32 - Class of event with 32-byte buffer. (a lot of info size, for long data)

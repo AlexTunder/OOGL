@@ -15,6 +15,7 @@ typedef Event16 Event;
 using std::thread;
     char *EventBuffer32[EVENTBUFFERSIZE];
     char *EventBuffer16[EVENTBUFFERSIZE];
+namespace glClass{
 class eventException{
     public:
         char *error_text = new char;
@@ -76,17 +77,22 @@ private:
     int datacrash(char *eventdata);
     thread HandlerMainLoop;
 public:
-char *targethost, eventdata[16];
-void evetFunc(char eventdata[16]){
-    // if()
-}
-void (*doAtEvent)(char eventdata[16]);
-Handler16(void (*doAtEvent)(char eventdata[16]), char eventdata[16]);
-int start();
-};
-Handler16::Handler16(void (*doAtEvent)(char eventdata[16]), char eventdata[16]){
-    this->doAtEvent = doAtEvent;
-    strcpy(this->eventdata, eventdata);
-    HandlerMainLoop = thread(doAtEvent ,this, eventdata);
-    HandlerMainLoop.detach();
-}
+    char *eventdata;
+    int BufferIndex;
+    void (*doAtEvent)(char eventdata[16]);
+private:
+    void threadVoid(){while(1){
+        for(int index = 0; index < EVENTBUFFERSIZE; index++)
+            if(EventBuffer16[index] == eventdata) {
+                doAtEvent(eventdata);
+                break;
+            } else continue;}
+    }
+public:
+    Handler16(void (*doAtEvent)(char eventdata[16]), char eventdata[16]){
+        this->doAtEvent = doAtEvent;
+        this->eventdata = &eventdata[0];
+        HandlerMainLoop = thread(&glClass::Handler16::threadVoid ,this);
+        HandlerMainLoop.detach();
+    }
+};}

@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <iostream>
 #include "basic3d.hpp"
+#include "EventCore.hpp"
 glClass::model a;
 void display() {
     // cout << a.main.VERTEXES[5].x;
@@ -21,11 +22,11 @@ void display() {
     // a.draw();
     glutSwapBuffers();
 }
-int main(int arg, char **argv){
+void glThread(int *arg, char**argv){
   glEnable(GL_TEXTURE2);
   // cout << "\w";
-  glutInit(&arg,argv);
-  cout << a.main.getObjFromFile("/home/alex/Sources/OOGL/resourses/untitled.obj");
+  glutInit(arg,argv);
+  a.main.getObjFromFile("/home/alex/Sources/OOGL/resourses/untitled.obj");
   glutInitWindowSize( 500, 450 );       /* A x A pixel screen window  */
 
   glutInitDisplayMode( GLUT_RGB | GLUT_DOUBLE);
@@ -35,13 +36,25 @@ int main(int arg, char **argv){
   glEnable(GL_TEXTURE_2D);
   glShadeModel(GL_FLAT);
   
- 
   glMatrixMode(GL_PROJECTION);      /* In World coordinates: */
   glLoadIdentity();                 /* position the "clipping rectangle" */
   glOrtho( -20.0,20.0, -20.0, 20.0,20.0,-20.0);/* at -B/2, its right edge at +B/2, its bottom */
   glMatrixMode(GL_MODELVIEW);       /* edge at -B/2 and its top edge at +B/2 */                      /* set attributes                 */
 
   glutMainLoop();                   /* pass control to the main loop  */
+}
+int main(int arg, char **argv){
+  std::thread glThreadBody(glThread,&arg,argv);
+  glThreadBody.detach();
+  string cmd;
+  while(1){
+    cin >> cmd;
+    if(cmd == "mv"){
+
+    }else{
+      cout << "unknowen:" << cmd << endl;
+    }
+  }
   cout << endl;
   return 0;
 }

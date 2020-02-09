@@ -84,7 +84,7 @@ namespace glClass
         Polygon *RENDERDC; //x - VERTEX.point, y - NORMALES.point, z - TEX_VERT.point, id - id
         //functions decloration
         int pushNewPoint(Point *VERTEX_TARGET, Point point);
-        int getObjFromFile(std::string string);
+        void getObjFromFile(std::string string);
         string mtlPath, imagePath;
         ~obj(){
             delete [] VERTEXES;
@@ -93,13 +93,13 @@ namespace glClass
             delete [] RENDERDC;
         }
     };
-    int obj::getObjFromFile(std::string string){
+    void obj::getObjFromFile(std::string string){
         // VERTEXES[0].id = NORMALES[0].id = TEX_VERT[0].id = RENDERDC[0].points[0].id = 0;
         ifstream fin(string);
         std::string substr;
         if(!fin.is_open())
             // throw ("Can't load image with stbi! See 94 str.");
-            return 95;
+            // return 95;
         while(!fin.eof()){ // OBJ file read
             fin >> substr;
             if(substr == "o"){
@@ -137,11 +137,11 @@ namespace glClass
                 PolygobCount = RENDERDC[0].points[0].id++;
                 for(int i = 0; i<4; i++){
                     fin >> substr;
-                    RENDERDC[RENDERDC[0].points[0].id].points[i].x = substr[0]  - '0';
-                    if(substr[2] != '/') {
-                        RENDERDC[RENDERDC[0].points[0].id].points[i].y = substr[2] - '0';
-                        RENDERDC[RENDERDC[0].points[0].id].points[i].z = substr[5] - '0';
-                    }else RENDERDC[RENDERDC[0].points[0].id].points[i].z = substr[3] - '0';
+                    RENDERDC[RENDERDC[0].points[0].id].points[i].y = atoi(substr.c_str());
+                    fin >> substr;
+                    RENDERDC[RENDERDC[0].points[0].id].points[i].x = atoi(substr.c_str());
+                    fin >> substr;
+                    RENDERDC[RENDERDC[0].points[0].id].points[i].z = atoi(substr.c_str());
                 }
             }else if(substr == "mtllib"){
                 fin >> mtlPath;
@@ -151,7 +151,7 @@ namespace glClass
             ifstream newfin(mtlPath);
             if(!newfin.is_open()){
                 newfin.close();
-                return 85;
+                // return 85;
             }
             while(!newfin.eof()){
                 newfin >> substr;
@@ -172,17 +172,17 @@ namespace glClass
             // if (imagePath != "")
             //     LoadGLTextures(ssyJJaszZPPaR);
     fin.close();
-    return 0;
+    // return 0;
 }
     int obj::pushNewPoint(Point *VERTEX_TARGET, Point point){
         VERTEX_TARGET[VERTEX_TARGET[0].id] = point;
     }
-    class model{
-      public:
-      obj main;
-      ~model(){
-          delete &main;
-      }
+class model{
+public:
+    obj main;
+    ~model(){
+        delete &main;
+    }
         void draw(){
             //drawing start
             // glEnable(GL_TEXTURE_2D);
